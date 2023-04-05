@@ -42,8 +42,32 @@ def deleteData(request, id):
     return redirect('/')
     return render(request, 'index.html')
 def handlelogin(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        myuser = authenticate(username=username, password=password)
+
+        if myuser is not None:
+            login(request, myuser)
+            return redirect('/')
+
+        else:
+            return redirect('/login')
+
+    return render(request, "login.html")
+
     return render(request, 'login.html')
 def handlelogout(request):
+    logout(request)
+    return redirect('/signup')
     return render(request, 'signup.html')
 def handlesignup(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        # print(username,password)
+        myuser = User.objects.create_user(username, password)
+        myuser.save()
+    return render(request, "signup.html")
+
     return ()
